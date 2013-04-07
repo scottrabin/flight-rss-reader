@@ -1,4 +1,4 @@
-<table class="feed-list">
+<table class="table table-bordered table-striped feed-list">
 	<thead>
 		<tr>
 			<th>Name</th>
@@ -9,7 +9,9 @@
 	<tbody>
 	</tbody>
 </table>
-<form>
-	<input type="url" name="feedUrl" placeholder="Enter a feed URL" />
-	<button>Add</button>
+<form class="form-inline">
+	<div class="input-append">
+		<input type="url" name="feedUrl" placeholder="Enter a feed URL" class="span6" />
+		<button type="submit" class="btn">Add</button>
+	</div>
 </form>
