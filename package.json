@@ -1,0 +1,17 @@
+{
+  "name": "flight-book",
+  "version": "0.0.1",
+  "author": "Scott Rabin <scottrabin@gmail.com>",
+  "description": "An RSS reader web app built as an example for Developing a Flight Edge",
+  "scripts": {
+    "test": "phantomjs node_modules/phantom-jasmine/lib/run_jasmine_test.coffee tests/TestRunner.html"
+  },
+  "devDependencies": {
+    "phantomjs": "1.9.x",
+    "phantom-jasmine": "0.2.x"
+  },
+  "license": "MIT",
+  "dependencies": {
+    "requirejs": "~2.1.x"
+  }
+}
