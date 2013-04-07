@@ -15,6 +15,12 @@ define([
 			'input[type="submit"]'
 		];
 
+		function submitFeed(feedUrl) {
+			// simulate entering a feed and submitting the form
+			$input.val(feedUrl);
+			$submitButton.click();
+		}
+
 		beforeEach(function() {
 			this.addMatchers({
 				toExist: function(expected) {
@@ -48,9 +54,8 @@ define([
 			// there should be no feeds to start
 			expect(feed).not.toExist();
 
-			// simulate entering a feed and submitting the form
-			$input.val(FEED_URL);
-			$submitButton.click();
+			// add a feed
+			submitFeed(FEED_URL);
 
 			// now there should be a feed with the specified url in the component
 			feed = $component.find('.feed');
@@ -60,9 +65,8 @@ define([
 
 		it("should remove a feed from the list when the 'remove' button is clicked", function() {
 			var feed;
-			// simulate entering a feed and submitting the form
-			$input.val(FEED_URL);
-			$submitButton.click();
+			// add a feed
+			submitFeed(FEED_URL);
 
 			feed = $component.find('.feed');
 			expect(feed).toHaveNElements(1);
@@ -70,6 +74,13 @@ define([
 
 			feed = $component.find('.feed');
 			expect(feed).not.toExist();
+		});
+
+		it("should clear the form when a new feed is submitted", function() {
+			expect($input.val()).toBe('');
+			// go through the add feed process
+			submitFeed(FEED_URL);
+			expect($input.val()).toBe('');
 		});
 	});
 });

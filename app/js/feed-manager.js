@@ -30,6 +30,9 @@ define(function(require) {
 			feed.find('.url').text(formData.feedUrl);
 			// and insert it into the list
 			this.select('feedList').append(feed);
+
+			// clear out the form
+			$(event.target).closest('form').get(0).reset();
 		};
 
 		/**
