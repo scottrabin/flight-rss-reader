@@ -57,5 +57,19 @@ define([
 			expect(feed).toHaveNElements(1);
 			expect(feed.find('.url').text()).toEqual(FEED_URL);
 		});
+
+		it("should remove a feed from the list when the 'remove' button is clicked", function() {
+			var feed;
+			// simulate entering a feed and submitting the form
+			$input.val(FEED_URL);
+			$submitButton.click();
+
+			feed = $component.find('.feed');
+			expect(feed).toHaveNElements(1);
+			feed.find('.remove').click();
+
+			feed = $component.find('.feed');
+			expect(feed).not.toExist();
+		});
 	});
 });

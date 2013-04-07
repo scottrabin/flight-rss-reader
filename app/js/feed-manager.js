@@ -8,6 +8,8 @@ define(function(require) {
 
 	function FeedManager() {
 		this.defaultAttrs({
+			"feedItem": ".feed",
+			"removeFeed": ".feed .remove",
 			"addForm": "form",
 			"feedList": ".feed-list tbody"
 		});
@@ -30,12 +32,23 @@ define(function(require) {
 			this.select('feedList').append(feed);
 		};
 
+		/**
+		 * Remove a feed from the list of watched feeds
+		 */
+		this.removeFeed = function(event) {
+			$(event.target).closest(this.attr.feedItem).remove();
+		};
+
 		this.after('initialize', function() {
 			// insert the feed manager template into the component node
 			this.$node.html(feedManagerTemplate);
 
 			this.on('submit', {
 				"addForm": this.addFeed
+			});
+
+			this.on('click', {
+				"removeFeed": this.removeFeed
 			});
 		});
 	}
