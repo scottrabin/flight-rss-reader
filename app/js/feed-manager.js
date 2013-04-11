@@ -49,7 +49,12 @@ define(function(require) {
 		 * Remove a feed from the list of watched feeds
 		 */
 		this.removeFeed = function(event) {
-			$(event.target).closest(this.attr.feedItem).remove();
+			var feedRow = $(event.target).closest(this.attr.feedItem).remove();
+			var feedData = {
+				url: feedRow.find('.url').text()
+			};
+
+			this.trigger('removeFeed', feedData);
 		};
 
 		this.after('initialize', function() {

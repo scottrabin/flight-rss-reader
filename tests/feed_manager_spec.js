@@ -100,5 +100,29 @@ define([
 			});
 			$(document).off('addFeed', eventListener);
 		});
+
+		it("should emit a 'removeFeed' event when a feed is removed", function() {
+			// Create an event listener and attach it to the
+			// document object to listen for our custom event
+			var eventListener = jasmine.createSpy();
+			$(document).on('removeFeed', eventListener);
+
+			// Add the feed
+			submitFeed(FEED_URL);
+
+			// verify our event listener has not been called yet
+			expect(eventListener).not.toHaveBeenCalled();
+
+			// remove the feed
+			$component.find('.remove').click();
+
+			// verify the event listener was called with the correct
+			// feed data
+			expect(eventListener).toHaveBeenCalled();
+			expect(eventListener.mostRecentCall.args[1]).toEqual({
+				url: FEED_URL
+			});
+			$(document).off('removeFeed', eventListener);
+		});
 	});
 });
