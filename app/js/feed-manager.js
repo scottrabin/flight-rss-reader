@@ -15,24 +15,34 @@ define(function(require) {
 		});
 
 		/**
-		 * Add a specified feed to the list of watched feeds
+		 * Intercept the form submit event and synthesize it into
+		 * a "addFeed" event
 		 */
-		this.addFeed = function(event) {
+		this.submitFeed = function(event) {
 			// first, cancel the event; don't want to
 			// unintentionally submit the form
 			event.preventDefault();
 
 			// get the form data as a key/value pair
 			var formData = extractFormData(event);
+
+			// trigger the synthetic event
+			this.trigger('addFeed', formData);
+		};
+
+		/**
+		 * Add a specified feed to the list of watched feeds
+		 */
+		this.addFeed = function(event, feedData) {
 			// create a new feed row
 			var feed = $(feedListItemTemplate);
 			// format it
-			feed.find('.url').text(formData.feedUrl);
+			feed.find('.url').text(feedData.url);
 			// and insert it into the list
 			this.select('feedList').append(feed);
 
 			// clear out the form
-			$(event.target).closest('form').get(0).reset();
+			this.select('addForm').get(0).reset();
 		};
 
 		/**
@@ -47,12 +57,15 @@ define(function(require) {
 			this.$node.html(feedManagerTemplate);
 
 			this.on('submit', {
-				"addForm": this.addFeed
+				"addForm": this.submitFeed
 			});
 
 			this.on('click', {
 				"removeFeed": this.removeFeed
 			});
+
+			// handle synthetic events
+			this.on(document, 'addFeed', this.addFeed);
 		});
 	}
 

@@ -82,5 +82,23 @@ define([
 			submitFeed(FEED_URL);
 			expect($input.val()).toBe('');
 		});
+
+		it("should emit a 'addFeed' event when a feed is added", function() {
+			// Create an event listener and attach it to the
+			// document object to listen for our custom event
+			var eventListener = jasmine.createSpy();
+			$(document).on('addFeed', eventListener);
+
+			// Add the feed
+			submitFeed(FEED_URL);
+
+			// verify our event listener was called and the
+			// correct data was given
+			expect(eventListener).toHaveBeenCalled();
+			expect(eventListener.mostRecentCall.args[1]).toEqual({
+				url: FEED_URL
+			});
+			$(document).off('addFeed', eventListener);
+		});
 	});
 });
