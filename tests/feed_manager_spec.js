@@ -109,4 +109,11 @@ describeComponent('feed-manager', function() {
 			url: FEED_URL
 		});
 	});
+
+	it("should respond to the 'removeFeed' event by removing a feed from the list", function() {
+		this.submitFeed(FEED_URL);
+		expect(this.component.select('feedItem').length).toBe(1);
+		this.component.trigger('removeFeed', {url: FEED_URL});
+		expect(this.component.select('feedItem')).not.toExist();
+	});
 });
