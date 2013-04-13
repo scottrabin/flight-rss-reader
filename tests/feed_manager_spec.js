@@ -1,128 +1,104 @@
-define([
-	'feed-manager'
-], function(FeedManager) {
+"use strict";
 
+describeComponent('feed-manager', function() {
+	var SUBMIT_BUTTONS = [
+		// buttons default to `type="submit"` when `type` is absent
+		'button:not([type])',
+		// include buttons with an explicit `type="submit"`
+		'button[type="submit"]',
+		// inputs of type "submit"
+		'input[type="submit"]'
+	];
 	var FEED_URL = 'http://localhost/not-a-real-feed.rss';
 
-	describe('component/feedManager', function() {
-		var $component, $form, $input, $submitButton;
-		var validSubmitButtons = [
-			// buttons default to `type="submit"` when `type` is absent
-			'button:not([type])',
-			// include buttons with an explicit `type="submit"`
-			'button[type="submit"]',
-			// inputs of type "submit"
-			'input[type="submit"]'
-		];
+	beforeEach(function() {
+		setupComponent();
 
-		function submitFeed(feedUrl) {
-			// simulate entering a feed and submitting the form
-			$input.val(feedUrl);
-			$submitButton.click();
-		}
+		/**
+		 * Helper function to mimic "submitting a feed"
+		 */
+		this.submitFeed = function(feed) {
+			this.component.$node.find('input[type="url"]').val(feed);
+			this.component.$node.find(SUBMIT_BUTTONS.join(',')).click();
+		}.bind(this);
+	});
 
-		beforeEach(function() {
-			this.addMatchers({
-				toExist: function(expected) {
-					return this.actual && this.actual.length > 0;
-				},
-				toHaveNElements: function(expected) {
-					return this.actual && this.actual.length == expected;
-				}
-			});
+	it("should present the user with a way to enter a new feed", function() {
+		expect(this.component.$node.find('form')).toExist();
+		expect(this.component.$node.find('input[type="url"]')).toExist();
+		expect(this.component.$node.find(SUBMIT_BUTTONS.join(','))).toExist();
+	});
 
-			$component = $(document.createElement('div')).appendTo(document.body);
-			FeedManager.attachTo($component);
+	it("should add a new feed to the list when the user submits the form", function() {
+		var feed = this.component.select('feedItem');
+		// there should be no feeds to start
+		expect(feed).not.toExist();
 
-			$form = $component.find('form');
-			$input = $form.find('[type="url"]');
-			$submitButton = $form.find(validSubmitButtons.join(', '));
+		// add a feed
+		this.submitFeed(FEED_URL);
+
+		// now there should be a feed with the specified url in the component
+		feed = this.component.select('feedItem');
+		expect(feed.length).toBe(1);
+		expect(feed.find('.url').text()).toEqual(FEED_URL);
+	});
+
+	it("should remove a feed from the list when the 'remove' button is clicked", function() {
+		var feed;
+		// add a feed
+		this.submitFeed(FEED_URL);
+
+		feed = this.component.select('feedItem');
+		expect(feed.length).toBe(1);
+		feed.find('.remove').click();
+
+		feed = this.component.select('feedItem');
+		expect(feed).not.toExist();
+	});
+
+	it("should clear the form when a new feed is submitted", function() {
+		var $input = this.component.$node.find('input[type="url"]');
+		expect($input.val()).toBe('');
+		// go through the add feed process
+		this.submitFeed(FEED_URL);
+		expect($input.val()).toBe('');
+	});
+
+	it("should emit a 'addFeed' event when a feed is added", function() {
+		// Create an event listener and attach it to the
+		// document object to listen for our custom event
+		var eventSpy = spyOnEvent(document, 'addFeed');
+
+		// Add the feed
+		this.submitFeed(FEED_URL);
+
+		// verify our event listener was called and the
+		// correct data was given
+		expect(eventSpy).toHaveBeenTriggeredOn(document);
+		expect(eventSpy.mostRecentCall.args[1]).toEqual({
+			url: FEED_URL
 		});
-		afterEach(function() {
-			$component.remove();
-		});
+	});
 
-		it("should present the user with a way to enter a new feed", function() {
-			expect($component).toExist();
-			expect($form).toExist();
-			expect($input).toExist();
-			expect($submitButton).toExist();
-		});
+	it("should emit a 'removeFeed' event when a feed is removed", function() {
+		// Create an event listener and attach it to the
+		// document object to listen for our custom event
+		var eventSpy = spyOnEvent(document, 'removeFeed');
 
-		it("should add a new feed to the list when the user submits the form", function() {
-			var feed = $component.find('.feed');
-			// there should be no feeds to start
-			expect(feed).not.toExist();
+		// Add the feed
+		this.submitFeed(FEED_URL);
 
-			// add a feed
-			submitFeed(FEED_URL);
+		// verify our event listener has not been called yet
+		expect(eventSpy).not.toHaveBeenTriggeredOn(document);
 
-			// now there should be a feed with the specified url in the component
-			feed = $component.find('.feed');
-			expect(feed).toHaveNElements(1);
-			expect(feed.find('.url').text()).toEqual(FEED_URL);
-		});
+		// remove the feed
+		this.component.select('feedItem').find('.remove').click();
 
-		it("should remove a feed from the list when the 'remove' button is clicked", function() {
-			var feed;
-			// add a feed
-			submitFeed(FEED_URL);
-
-			feed = $component.find('.feed');
-			expect(feed).toHaveNElements(1);
-			feed.find('.remove').click();
-
-			feed = $component.find('.feed');
-			expect(feed).not.toExist();
-		});
-
-		it("should clear the form when a new feed is submitted", function() {
-			expect($input.val()).toBe('');
-			// go through the add feed process
-			submitFeed(FEED_URL);
-			expect($input.val()).toBe('');
-		});
-
-		it("should emit a 'addFeed' event when a feed is added", function() {
-			// Create an event listener and attach it to the
-			// document object to listen for our custom event
-			var eventListener = jasmine.createSpy();
-			$(document).on('addFeed', eventListener);
-
-			// Add the feed
-			submitFeed(FEED_URL);
-
-			// verify our event listener was called and the
-			// correct data was given
-			expect(eventListener).toHaveBeenCalled();
-			expect(eventListener.mostRecentCall.args[1]).toEqual({
-				url: FEED_URL
-			});
-			$(document).off('addFeed', eventListener);
-		});
-
-		it("should emit a 'removeFeed' event when a feed is removed", function() {
-			// Create an event listener and attach it to the
-			// document object to listen for our custom event
-			var eventListener = jasmine.createSpy();
-			$(document).on('removeFeed', eventListener);
-
-			// Add the feed
-			submitFeed(FEED_URL);
-
-			// verify our event listener has not been called yet
-			expect(eventListener).not.toHaveBeenCalled();
-
-			// remove the feed
-			$component.find('.remove').click();
-
-			// verify the event listener was called with the correct
-			// feed data
-			expect(eventListener).toHaveBeenCalled();
-			expect(eventListener.mostRecentCall.args[1]).toEqual({
-				url: FEED_URL
-			});
-			$(document).off('removeFeed', eventListener);
+		// verify the event listener was called with the correct
+		// feed data
+		expect(eventSpy).toHaveBeenTriggeredOn(document);
+		expect(eventSpy.mostRecentCall.args[1]).toEqual({
+			url: FEED_URL
 		});
 	});
 });
