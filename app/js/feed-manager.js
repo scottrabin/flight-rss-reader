@@ -48,13 +48,22 @@ define(function(require) {
 		/**
 		 * Remove a feed from the list of watched feeds
 		 */
-		this.removeFeed = function(event) {
-			var feedRow = $(event.target).closest(this.attr.feedItem).remove();
-			var feedData = {
+		this.removeFeed = function(event, feed) {
+			var feedRow = this.select('feedItem').filter(function() {
+				return $(this).find('.url').text() == feed.url;
+			});
+			feedRow.remove();
+		};
+
+		/**
+		 * Event listener for removing the feed
+		 */
+		this.sendRemoveFeed = function(event) {
+			var feedRow = $(event.target).closest(this.attr.feedItem);
+			var feed = {
 				url: feedRow.find('.url').text()
 			};
-
-			this.trigger('removeFeed', feedData);
+			this.trigger('removeFeed', feed);
 		};
 
 		this.after('initialize', function() {
@@ -66,11 +75,12 @@ define(function(require) {
 			});
 
 			this.on('click', {
-				"removeFeed": this.removeFeed
+				"removeFeed": this.sendRemoveFeed
 			});
 
 			// handle synthetic events
 			this.on(document, 'addFeed', this.addFeed);
+			this.on(document, 'removeFeed', this.removeFeed);
 		});
 	}
 
