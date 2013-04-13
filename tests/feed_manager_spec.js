@@ -80,6 +80,14 @@ describeComponent('feed-manager', function() {
 		});
 	});
 
+	it("should respond to the 'addFeed' event by adding a feed to the list", function() {
+		expect(this.component.select('feedItem')).not.toExist();
+
+		this.component.trigger('addFeed', {url: FEED_URL});
+
+		expect(this.component.select('feedItem').length).toBe(1);
+	});
+
 	it("should emit a 'removeFeed' event when a feed is removed", function() {
 		// Create an event listener and attach it to the
 		// document object to listen for our custom event
