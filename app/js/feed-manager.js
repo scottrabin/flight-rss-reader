@@ -41,6 +41,9 @@ define(function(require) {
 			// and insert it into the list
 			this.select('feedList').append(feed);
 
+			// request additional feed data
+			this.trigger('needsFeedInfo', feedData);
+
 			// clear out the form
 			this.select('addForm').get(0).reset();
 		};

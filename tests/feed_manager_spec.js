@@ -116,4 +116,14 @@ describeComponent('feed-manager', function() {
 		this.component.trigger('removeFeed', {feedUrl: FEED_URL});
 		expect(this.component.select('feedItem')).not.toExist();
 	});
+
+	it("should respond to 'addFeed' by emitting a 'needsFeedInfo' event", function() {
+		var eventSpy = spyOnEvent(document, 'needsFeedInfo');
+
+		this.component.trigger('addFeed', {feedUrl: FEED_URL});
+		expect(eventSpy).toHaveBeenTriggeredOn(document);
+		expect(eventSpy.mostRecentCall.data).toEqual({
+			feedUrl: FEED_URL
+		});
+	});
 });
