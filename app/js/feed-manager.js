@@ -69,6 +69,16 @@ define(function(require) {
 			this.trigger('removeFeed', feed);
 		};
 
+		/**
+		 * Event listener for updating feed data after request fulfillment
+		 */
+		this.updateFeed = function(event, feedData) {
+			var feedRow = this.select('feedItem').filter(function() {
+				return $(this).find('.url').text() == feedData.feedUrl;
+			});
+			feedRow.find('.title').text(feedData.title);
+		};
+
 		this.after('initialize', function() {
 			// insert the feed manager template into the component node
 			this.$node.html(feedManagerTemplate);
@@ -84,6 +94,7 @@ define(function(require) {
 			// handle synthetic events
 			this.on(document, 'addFeed', this.addFeed);
 			this.on(document, 'removeFeed', this.removeFeed);
+			this.on(document, 'dataFeedInfo', this.updateFeed);
 		});
 	}
 

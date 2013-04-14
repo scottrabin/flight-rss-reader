@@ -126,4 +126,29 @@ describeComponent('feed-manager', function() {
 			feedUrl: FEED_URL
 		});
 	});
+
+	it("should respond to 'dataFeedInfo' by updating the feed title", function() {
+		// submit 2 feeds
+		var feed1 = 'http://127.0.0.1/feed-1';
+		var feed2 = 'http://127.0.0.1/feed-2';
+		this.submitFeed(feed1);
+		this.submitFeed(feed2);
+
+		// verify both are in the table
+		expect(this.component.select('feedItem').length).toBe(2);
+
+		// trigger the event in question
+		this.component.trigger('dataFeedInfo', {
+			feedUrl: feed2,
+			title: "The Feed Title"
+		});
+
+		// verify that feed-1 does not have a title, but feed-2 does
+		expect(this.component.select('feedItem').filter(function() {
+			return $(this).find('.url').text() == feed1;
+		}).find('.title').text()).toBe('');
+		expect(this.component.select('feedItem').filter(function() {
+			return $(this).find('.url').text() == feed2;
+		}).find('.title').text()).toBe("The Feed Title");
+	});
 });
