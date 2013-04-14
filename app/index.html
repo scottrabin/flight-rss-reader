@@ -5,6 +5,10 @@
   <script type="text/javascript" src="../app/components/es5-shim/es5-shim.js"></script>
   <link rel="stylesheet" media="screen" href="css/bootstrap.min.css">
   <link rel="stylesheet" media="screen" href="css/bootstrap-responsive.min.css">
+  <script type="text/javascript" src="//www.google.com/jsapi"></script>
+  <script type="text/javascript">
+	google.load('feeds', 1);
+  </script>
 </head>
 <body>
 
@@ -20,8 +24,10 @@
 			"flight": "../components/flight"
 		}
 	}, [
+		'feed-service',
 		'feed-manager'
-	], function(FeedManager) {
+	], function(FeedService, FeedManager) {
+		FeedService.attachTo(document);
 		FeedManager.attachTo('#feed-manager');
 	});
 </script>

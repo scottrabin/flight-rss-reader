@@ -37,7 +37,7 @@ define(function(require) {
 			// create a new feed row
 			var feed = $(feedListItemTemplate);
 			// format it
-			feed.find('.url').text(feedData.url);
+			feed.find('.url').text(feedData.feedUrl);
 			// and insert it into the list
 			this.select('feedList').append(feed);
 
@@ -50,7 +50,7 @@ define(function(require) {
 		 */
 		this.removeFeed = function(event, feed) {
 			var feedRow = this.select('feedItem').filter(function() {
-				return $(this).find('.url').text() == feed.url;
+				return $(this).find('.url').text() == feed.feedUrl;
 			});
 			feedRow.remove();
 		};
@@ -61,7 +61,7 @@ define(function(require) {
 		this.sendRemoveFeed = function(event) {
 			var feedRow = $(event.target).closest(this.attr.feedItem);
 			var feed = {
-				url: feedRow.find('.url').text()
+				feedUrl: feedRow.find('.url').text()
 			};
 			this.trigger('removeFeed', feed);
 		};
