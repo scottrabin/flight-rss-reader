@@ -10,14 +10,11 @@ define(function(require) {
 		};
 
 		this.executeRequest = function(feedUrl, callback) {
-			callback({
-				feedUrl: feedUrl,
-				title: "Dummy Title"
-			});
+			new google.feeds.Feed(feedUrl).load(callback);
 		};
 
 		this.requestCallback = function(feed) {
-			this.trigger('dataFeedInfo', feed);
+			this.trigger('dataFeedInfo', feed.feed);
 		};
 
 		this.after('initialize', function() {
