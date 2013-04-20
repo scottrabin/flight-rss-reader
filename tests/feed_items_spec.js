@@ -47,4 +47,14 @@ describeComponent('feed-items', function() {
 		this.component.trigger('dataFeedInfo', FEED_DATA);
 		expect(this.component.select('feedItem').length).toBe(3);
 	});
+
+	it("should not insert duplicate entries into the list of displayed feeds", function() {
+		this.component.trigger('dataFeedInfo', FEED_DATA);
+		expect(this.component.select('feedItem').length).toBe(3);
+		this.component.trigger('dataFeedInfo', {
+			title: "Test RSS Feed",
+			entries: [FEED_ITEMS[0]]
+		});
+		expect(this.component.select('feedItem').length).toBe(3);
+	});
 });

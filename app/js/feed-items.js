@@ -16,11 +16,17 @@ define(function(require) {
 		};
 
 		this.insertEntry = function(entry) {
-			$(template).
-				find('.title').text(entry.title).end().
-				find('.link').attr('href', entry.link).end().
-				find('.snippet').text(entry.contentSnippet).end().
-				appendTo(this.$node);
+			// detect an entry's existence by looking for a feed item
+			// with a link that points to the same place
+			var exists = (this.select('feedItem').
+				find('.link[href="' + entry.link + '"]').length > 0);
+			if (!exists) {
+				$(template).
+					find('.title').text(entry.title).end().
+					find('.link').attr('href', entry.link).end().
+					find('.snippet').text(entry.contentSnippet).end().
+					appendTo(this.$node);
+			}
 		};
 
 		this.after('initialize', function() {
