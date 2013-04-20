@@ -12,6 +12,7 @@
 </head>
 <body>
 
+<div id="feed-items"></div>
 <div id="feed-manager"></div>
 
 <script type="text/javascript" src="../app/components/jquery/jquery.js"></script>
@@ -25,9 +26,11 @@
 		}
 	}, [
 		'feed-service',
+		'feed-items',
 		'feed-manager'
-	], function(FeedService, FeedManager) {
+	], function(FeedService, FeedItems, FeedManager) {
 		FeedService.attachTo(document);
+		FeedItems.attachTo('#feed-items');
 		FeedManager.attachTo('#feed-manager');
 	});
 </script>
