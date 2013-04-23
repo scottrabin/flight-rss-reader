@@ -48,6 +48,18 @@ describeComponent('feed-items', function() {
 		expect(this.component.select('feedItem').length).toBe(3);
 	});
 
+	it("should insert a feed item that display the relevant entry information", function() {
+		this.component.trigger('dataFeedInfo', FEED_DATA);
+
+		expect(this.component.select('feedItem').length).toBe(3);
+		this.component.select('feedItem').each(function(index) {
+			var feedItem = $(this);
+			expect(feedItem.find('.title').text()).toBe(FEED_ITEMS[index].title);
+			expect(feedItem.find('.link').attr('href')).toBe(FEED_ITEMS[index].link);
+			expect(feedItem.find('.snippet').text()).toBe(FEED_ITEMS[index].contentSnippet);
+		});
+	});
+
 	it("should not insert duplicate entries into the list of displayed feeds", function() {
 		this.component.trigger('dataFeedInfo', FEED_DATA);
 		expect(this.component.select('feedItem').length).toBe(3);
