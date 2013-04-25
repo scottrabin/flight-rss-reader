@@ -32,6 +32,7 @@ describeComponent('feed-aggregator', function() {
 	var FEED_DATA = {
 		title: "Test RSS Feed",
 		link:  "http://localhost/",
+		feedUrl: "http://localhost/rss",
 		description: "This is a description of the RSS feed",
 		author: "Author's Name",
 		entries: FEED_ITEMS
@@ -67,6 +68,7 @@ describeComponent('feed-aggregator', function() {
 	var OTHER_FEED_DATA = {
 		title: "Some other RSS feed",
 		link: "http://127.0.0.1/",
+		feedUrl: "http://127.0.0.1/rss",
 		description: "This is an RSS feed that is not the other RSS feed",
 		author: "Me, Myself, and I",
 		entries: OTHER_FEED_ITEMS
@@ -150,5 +152,15 @@ describeComponent('feed-aggregator', function() {
 		this.component.select('feedItem').each(function(i) {
 			expect($(this).find('.title').text()).toBe(entryOrder[i].title);
 		});
+	});
+
+	// Exercises to the reader: removing feeds
+	it("should remove entries when the source feed is removed", function() {
+		this.component.trigger('dataFeedInfo', FEED_DATA);
+		this.component.trigger('dataFeedInfo', OTHER_FEED_DATA);
+
+		expect(this.component.select('feedItem').length).toBe(6);
+		this.component.trigger('removeFeed', FEED_DATA);
+		expect(this.component.select('feedItem').length).toBe(3);
 	});
 });

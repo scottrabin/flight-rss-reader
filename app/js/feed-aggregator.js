@@ -17,18 +17,23 @@ define(function(require) {
 			this.insertOption(feedData);
 
 			if (feedData.entries) {
-				this.entries[feedData.link] = feedData.entries;
+				this.entries[feedData.feedUrl] = feedData.entries;
 				this.render();
 			}
 		};
 
+		this.removeFeed = function(event, feed) {
+			delete this.entries[feed.feedUrl];
+			this.render();
+		};
+
 		this.insertOption = function(feed) {
 			var exists = (this.select('filterSelector').
-						  find('option[value="' + feed.link + '"]').length > 0);
+						  find('option[value="' + feed.feedUrl + '"]').length > 0);
 			if (!exists) {
 				$(document.createElement('option')).
 					text(feed.title).
-					val(feed.link).
+					val(feed.feedUrl).
 					appendTo(this.select('filterSelector'));
 			}
 		};
@@ -76,6 +81,7 @@ define(function(require) {
 				'filterSelector': this.render
 			});
 			this.on(document, 'dataFeedInfo', this.updateFeeds);
+			this.on(document, 'removeFeed', this.removeFeed);
 
 			// internal store of entries
 			this.entries = {};
