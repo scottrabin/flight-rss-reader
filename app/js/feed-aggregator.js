@@ -51,15 +51,23 @@ define(function(require) {
 			// blank out the feed list
 			this.select('feedList').empty();
 			var source = this.select('filterSelector').val();
+			var entries;
 			if (source) {
 				// if a source is chosen, only render the entries in that feed
-				this.entries[source].forEach(this.insertEntry, this);
+				entries = this.entries[source];
 			} else {
 				// if no source chosen, render all
-				$.each(this.entries, function(src, entries) {
-					entries.forEach(this.insertEntry, this);
-				}.bind(this));
+				// assemble a list of entries to render
+				entries = [];
+				$.each(this.entries, function(src, feedEntries) {
+					entries = entries.concat(feedEntries);
+				});
+				// sort them by date
+				entries.sort(function(a, b) {
+					return (new Date(b.publishedDate).getTime() - new Date(a.publishedDate).getTime());
+				});
 			}
+			entries.forEach(this.insertEntry, this);
 		};
 
 		this.after('initialize', function() {

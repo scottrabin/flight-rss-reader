@@ -43,7 +43,7 @@ describeComponent('feed-aggregator', function() {
 			link:  "http://127.0.0.1/item-1",
 			content: '<span>Item 1 Content</span>',
 			contentSnippet: "Item 1 Content",
-			publishedDate: "Mon, 15 Apr 2012 06:15:00 -0700",
+			publishedDate: "Mon, 15 Apr 2013 08:15:00 -0700",
 			categories: []
 		},
 		{
@@ -51,7 +51,7 @@ describeComponent('feed-aggregator', function() {
 			link:  "http://127.0.0.1/item-2",
 			content: '<span>Item 2 Content</span>',
 			contentSnippet: "Item 2 Content",
-			publishedDate: "Wed, 17 Apr 2012 06:15:00 -0700",
+			publishedDate: "Wed, 24 Apr 2013 06:15:00 -0700",
 			categories: []
 		},
 		{
@@ -59,7 +59,7 @@ describeComponent('feed-aggregator', function() {
 			link:  "http://127.0.0.1/item-3",
 			content: '<span>Item 3 Content</span>',
 			contentSnippet: "Item 3 Content",
-			publishedDate: "Fri, 19 Apr 2012 06:15:00 -0700",
+			publishedDate: "Fri, 26 Apr 2013 06:15:00 -0700",
 			categories: []
 		}
 	];
@@ -84,14 +84,16 @@ describeComponent('feed-aggregator', function() {
 	});
 
 	it("should insert a feed item that display the relevant entry information", function() {
-		this.component.trigger('dataFeedInfo', FEED_DATA);
+		var data = $.extend({}, FEED_DATA);
+		data.entries = [FEED_ITEMS[0]];
+		this.component.trigger('dataFeedInfo', data);
 
-		expect(this.component.select('feedItem').length).toBe(3);
-		this.component.select('feedItem').each(function(index) {
+		expect(this.component.select('feedItem').length).toBe(1);
+		this.component.select('feedItem').each(function() {
 			var feedItem = $(this);
-			expect(feedItem.find('.title').text()).toBe(FEED_ITEMS[index].title);
-			expect(feedItem.find('.link').attr('href')).toBe(FEED_ITEMS[index].link);
-			expect(feedItem.find('.snippet').text()).toBe(FEED_ITEMS[index].contentSnippet);
+			expect(feedItem.find('.title').text()).toBe(FEED_ITEMS[0].title);
+			expect(feedItem.find('.link').attr('href')).toBe(FEED_ITEMS[0].link);
+			expect(feedItem.find('.snippet').text()).toBe(FEED_ITEMS[0].contentSnippet);
 		});
 	});
 
@@ -132,6 +134,21 @@ describeComponent('feed-aggregator', function() {
 		expect(this.component.select('feedItem').length).toBe(3);
 		this.component.select('feedItem').each(function(i) {
 			expect($(this).find('.title').text()).toBe(OTHER_FEED_ITEMS[i].title);
+		});
+	});
+
+	// Exercises to the reader: sorting entries by date
+	it("should display entries sorted by date", function() {
+		this.component.trigger('dataFeedInfo', FEED_DATA);
+		this.component.trigger('dataFeedInfo', OTHER_FEED_DATA);
+
+		var entryOrder = FEED_ITEMS.concat(OTHER_FEED_ITEMS).sort(function(a, b) {
+			return (new Date(b.publishedDate).getTime() - new Date(a.publishedDate).getTime());
+		});
+
+		expect(this.component.select('feedItem').length).toBe(6);
+		this.component.select('feedItem').each(function(i) {
+			expect($(this).find('.title').text()).toBe(entryOrder[i].title);
 		});
 	});
 });
