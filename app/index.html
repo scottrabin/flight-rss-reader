@@ -26,11 +26,11 @@
 		}
 	}, [
 		'feed-service',
-		'feed-items',
+		'feed-aggregator',
 		'feed-manager'
-	], function(FeedService, FeedItems, FeedManager) {
+	], function(FeedService, FeedAggregator, FeedManager) {
 		FeedService.attachTo(document);
-		FeedItems.attachTo('#feed-items');
+		FeedAggregator.attachTo('#feed-items');
 		FeedManager.attachTo('#feed-manager');
 	});
 </script>

@@ -1,6 +1,6 @@
 "use strict";
 
-describeComponent('feed-items', function() {
+describeComponent('feed-aggregator', function() {
 
 	var FEED_ITEMS = [
 		{
