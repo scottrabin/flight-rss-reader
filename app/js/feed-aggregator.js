@@ -17,9 +17,8 @@ define(function(require) {
 			this.insertOption(feedData);
 
 			if (feedData.entries) {
-				feedData.entries.forEach(function(entry) {
-					this.insertEntry(entry, feedData);
-				}, this);
+				this.entries[feedData.link] = feedData.entries;
+				this.render();
 			}
 		};
 
@@ -34,7 +33,7 @@ define(function(require) {
 			}
 		};
 
-		this.insertEntry = function(entry, feed) {
+		this.insertEntry = function(entry) {
 			// detect an entry's existence by looking for a feed item
 			// with a link that points to the same place
 			var exists = (this.select('feedItem').
@@ -44,30 +43,34 @@ define(function(require) {
 					find('.title').text(entry.title).end().
 					find('.link').attr('href', entry.link).end().
 					find('.snippet').text(entry.contentSnippet).end().
-					data('source', feed.link).
 					appendTo(this.select('feedList'));
 			}
 		};
 
-		this.filterEntries = function() {
+		this.render = function() {
+			// blank out the feed list
+			this.select('feedList').empty();
 			var source = this.select('filterSelector').val();
 			if (source) {
-				// if a source is chosen, toggle the visibility of each one by one
-				this.select('feedItem').each(function() {
-					$(this).toggle($(this).data('source') == source)
-				});
+				// if a source is chosen, only render the entries in that feed
+				this.entries[source].forEach(this.insertEntry, this);
 			} else {
-				// if no source chosen, show all
-				this.select('feedItem').show();
+				// if no source chosen, render all
+				$.each(this.entries, function(src, entries) {
+					entries.forEach(this.insertEntry, this);
+				}.bind(this));
 			}
 		};
 
 		this.after('initialize', function() {
 			this.$node.html(aggregatorTemplate);
 			this.on('change', {
-				'filterSelector': this.filterEntries
+				'filterSelector': this.render
 			});
 			this.on(document, 'dataFeedInfo', this.updateFeeds);
+
+			// internal store of entries
+			this.entries = {};
 		});
 	}
 

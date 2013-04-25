@@ -108,7 +108,7 @@ describeComponent('feed-aggregator', function() {
 		expect(this.component.select('filterSelector').length).toBeGreaterThan(0);
 
 		options = this.component.select('filterSelector').find('option').filter(function() {
-			return $(this).attr('value').length > 0;
+			return $(this).val().length > 0;
 		});
 		expect(options.length).toBe(0);
 
@@ -129,13 +129,9 @@ describeComponent('feed-aggregator', function() {
 		selector.val(selector.find('option:last').val());
 		selector.trigger('change');
 
-		this.component.select('feedItem').each(function() {
-			expect($(this).data('source')).toBeDefined();
-			if ($(this).data('source') == FEED_DATA.link) {
-				expect($(this)).not.toBeVisible();
-			} else {
-				expect($(this)).toBeVisible();
-			}
+		expect(this.component.select('feedItem').length).toBe(3);
+		this.component.select('feedItem').each(function(i) {
+			expect($(this).find('.title').text()).toBe(OTHER_FEED_ITEMS[i].title);
 		});
 	});
 });
