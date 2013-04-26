@@ -5,7 +5,7 @@ describeComponent('feed-service', function() {
 
 	beforeEach(setupComponent);
 
-	it("should respond to 'needsFeedInfo' events with 'dataFeedInfo'", function() {
+	it("should respond to 'uiNeedsFeedInfo' events with 'dataFeedInfo'", function() {
 		var eventData = spyOnEvent(document, 'dataFeedInfo');
 
 		// intercept the 'executeRequest' method and just call through
@@ -18,7 +18,7 @@ describeComponent('feed-service', function() {
 			});
 		});
 
-		this.component.trigger('needsFeedInfo', { feedUrl: FEED_URL });
+		this.component.trigger('uiNeedsFeedInfo', { feedUrl: FEED_URL });
 		expect(eventData).toHaveBeenTriggeredOn(document);
 		expect(eventData.mostRecentCall.data).toEqual({
 			feedUrl: FEED_URL,
@@ -36,7 +36,7 @@ describeComponent('feed-service', function() {
 		window.google = { feeds: { Feed: feedSpy } };
 
 		// trigger the event to start the process
-		this.component.trigger('needsFeedInfo', { feedUrl: FEED_URL });
+		this.component.trigger('uiNeedsFeedInfo', { feedUrl: FEED_URL });
 		// we should have created a new feed
 		expect(window.google.feeds.Feed.mostRecentCall.object instanceof feedSpy).toBeTruthy();
 		expect(window.google.feeds.Feed).toHaveBeenCalledWith(FEED_URL);
@@ -66,7 +66,7 @@ describeComponent('feed-service', function() {
 		var eventSpy = spyOnEvent(document, 'dataFeedInfo');
 
 		// trigger the event to start the process
-		this.component.trigger('needsFeedInfo', { feedUrl: FEED_URL });
+		this.component.trigger('uiNeedsFeedInfo', { feedUrl: FEED_URL });
 
 		// expect our event to have been triggered with the same data
 		expect(eventSpy).toHaveBeenTriggeredOn(document);
