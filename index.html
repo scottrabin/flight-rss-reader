@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Twitter Flight RSS Reader</title>
+  <script type="text/javascript" src="../app/components/es5-shim/es5-shim.js"></script>
+  <link rel="stylesheet" media="screen" href="css/bootstrap.min.css">
+  <link rel="stylesheet" media="screen" href="css/bootstrap-responsive.min.css">
+  <script type="text/javascript" src="//www.google.com/jsapi"></script>
+  <script type="text/javascript">
+	google.load('feeds', 1);
+  </script>
+</head>
+<body>
+
+<div id="feed-items"></div>
+<div id="feed-manager"></div>
+
+<script type="text/javascript" src="../app/components/jquery/jquery.js"></script>
+<script type="text/javascript" src="../app/components/requirejs/require.js"></script>
+<script type="text/javascript">
+	require({
+		baseUrl: "js",
+		paths: {
+			"text": "../components/requirejs-text/text",
+			"flight": "../components/flight"
+		}
+	}, [
+		'feed-service',
+		'feed-aggregator',
+		'feed-manager'
+	], function(FeedService, FeedAggregator, FeedManager) {
+		FeedService.attachTo(document);
+		FeedAggregator.attachTo('#feed-items');
+		FeedManager.attachTo('#feed-manager');
+	});
+</script>
+
+</body>
+</html>
