@@ -44,7 +44,7 @@ define(function(require) {
 				appendTo(this.select('feedList'));
 
 			// request additional feed data
-			this.trigger('needsFeedInfo', feedData);
+			this.trigger('uiNeedsFeedInfo', feedData);
 
 			// clear out the form
 			this.select('addForm').get(0).reset();
