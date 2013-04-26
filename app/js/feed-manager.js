@@ -36,10 +36,12 @@ define(function(require) {
 		this.addFeed = function(event, feedData) {
 			// create a new feed row
 			var feed = $(feedListItemTemplate);
-			// format it
-			feed.find('.url').text(feedData.feedUrl);
-			// and insert it into the list
-			this.select('feedList').append(feed);
+
+			feed.
+				// format it
+				find('.url').text(feedData.feedUrl).end().
+				// and insert it into the list
+				appendTo(this.select('feedList'));
 
 			// request additional feed data
 			this.trigger('needsFeedInfo', feedData);
