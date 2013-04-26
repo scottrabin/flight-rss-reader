@@ -54,7 +54,7 @@ describeComponent('feed-service', function() {
 			// provide some data that looks like the response format of the Google Feed API
 			callback({
 				feed: {
-					feedUrl: FEED_URL,
+					feedUrl: this.url,
 					title: "Dummy Title"
 				}
 			});
