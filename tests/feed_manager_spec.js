@@ -76,14 +76,14 @@ describeComponent('feed-manager', function() {
 		// correct data was given
 		expect(eventSpy).toHaveBeenTriggeredOn(document);
 		expect(eventSpy.mostRecentCall.args[1]).toEqual({
-			url: FEED_URL
+			feedUrl: FEED_URL
 		});
 	});
 
 	it("should respond to the 'addFeed' event by adding a feed to the list", function() {
 		expect(this.component.select('feedItem')).not.toExist();
 
-		this.component.trigger('addFeed', {url: FEED_URL});
+		this.component.trigger('addFeed', {feedUrl: FEED_URL});
 
 		expect(this.component.select('feedItem').length).toBe(1);
 	});
@@ -106,14 +106,14 @@ describeComponent('feed-manager', function() {
 		// feed data
 		expect(eventSpy).toHaveBeenTriggeredOn(document);
 		expect(eventSpy.mostRecentCall.args[1]).toEqual({
-			url: FEED_URL
+			feedUrl: FEED_URL
 		});
 	});
 
 	it("should respond to the 'removeFeed' event by removing a feed from the list", function() {
 		this.submitFeed(FEED_URL);
 		expect(this.component.select('feedItem').length).toBe(1);
-		this.component.trigger('removeFeed', {url: FEED_URL});
+		this.component.trigger('removeFeed', {feedUrl: FEED_URL});
 		expect(this.component.select('feedItem')).not.toExist();
 	});
 });
