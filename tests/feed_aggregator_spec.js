@@ -82,7 +82,7 @@ describeComponent('feed-aggregator', function() {
 
 	it("should listen for the 'dataFeedInfo' event and insert entries into the component", function() {
 		this.component.trigger('dataFeedInfo', FEED_DATA);
-		expect(this.component.select('feedItem').length).toBe(3);
+		expect(this.component.select('feedItem').length).toBe(FEED_ITEMS.length);
 	});
 
 	it("should insert a feed item that display the relevant entry information", function() {
@@ -101,9 +101,9 @@ describeComponent('feed-aggregator', function() {
 
 	it("should not insert duplicate entries into the list of displayed feeds", function() {
 		this.component.trigger('dataFeedInfo', FEED_DATA);
-		expect(this.component.select('feedItem').length).toBe(3);
+		expect(this.component.select('feedItem').length).toBe(FEED_ITEMS.length);
 		this.component.trigger('dataFeedInfo', FEED_DATA);
-		expect(this.component.select('feedItem').length).toBe(3);
+		expect(this.component.select('feedItem').length).toBe(FEED_ITEMS.length);
 	});
 
 	it("should present the user with a way to filter the displayed entries by source", function() {
@@ -127,13 +127,13 @@ describeComponent('feed-aggregator', function() {
 		this.component.trigger('dataFeedInfo', FEED_DATA);
 		this.component.trigger('dataFeedInfo', OTHER_FEED_DATA);
 
-		expect(this.component.select('feedItem').length).toBe(6);
+		expect(this.component.select('feedItem').length).toBe(FEED_ITEMS.length + OTHER_FEED_ITEMS.length);
 
 		var selector = this.component.select('filterSelector');
 		selector.val(selector.find('option:last').val());
 		selector.trigger('change');
 
-		expect(this.component.select('feedItem').length).toBe(3);
+		expect(this.component.select('feedItem').length).toBe(FEED_ITEMS.length);
 		this.component.select('feedItem').each(function(i) {
 			expect($(this).find('.title').text()).toBe(OTHER_FEED_ITEMS[i].title);
 		});
@@ -159,8 +159,8 @@ describeComponent('feed-aggregator', function() {
 		this.component.trigger('dataFeedInfo', FEED_DATA);
 		this.component.trigger('dataFeedInfo', OTHER_FEED_DATA);
 
-		expect(this.component.select('feedItem').length).toBe(6);
+		expect(this.component.select('feedItem').length).toBe(FEED_ITEMS.length + OTHER_FEED_ITEMS.length);
 		this.component.trigger('removeFeed', FEED_DATA);
-		expect(this.component.select('feedItem').length).toBe(3);
+		expect(this.component.select('feedItem').length).toBe(OTHER_FEED_ITEMS.length);
 	});
 });
