@@ -12,5 +12,15 @@ describeComponent('persistence', function() {
 
 			expect(this.component.getStoredFeeds()).toEqual(['http://feeds.com/rss']);
 		});
+
+		it("should respond to the 'removeFeed' event by removing the feed from storage", function() {
+			this.component.trigger('addFeed', {feedUrl: 'http://feeds.com/rss1'});
+			this.component.trigger('addFeed', {feedUrl: 'http://feeds.com/rss2'});
+
+			expect(this.component.getStoredFeeds().length).toBe(2);
+
+			this.component.trigger('removeFeed', {feedUrl: 'http://feeds.com/rss2'});
+			expect(this.component.getStoredFeeds()).toEqual(['http://feeds.com/rss1']);
+		});
 	});
 });

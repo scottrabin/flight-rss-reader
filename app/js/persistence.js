@@ -24,8 +24,18 @@ define(function(require) {
 			}
 		};
 
+		this.removeFeed = function(event, data) {
+			var currentFeeds = this.getStoredFeeds();
+			var feedIndex = currentFeeds.indexOf(data.feedUrl);
+			if (feedIndex > -1) {
+				currentFeeds.splice(feedIndex, 1);
+				this.storeFeeds(currentFeeds);
+			}
+		};
+
 		this.after('initialize', function() {
 			this.on(document, 'addFeed', this.storeFeed);
+			this.on(document, 'removeFeed', this.removeFeed);
 		});
 	}
 
