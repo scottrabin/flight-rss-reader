@@ -37,16 +37,23 @@
 		baseUrl: "js",
 		paths: {
 			"text": "../components/requirejs-text/text",
+			"jstorage": "../components/jStorage/jstorage",
+			"jcookie": "../components/jCookie/jcookie",
 			"flight": "../components/flight"
+		},
+		shim: {
+			"jstorage": ['jcookie']
 		}
 	}, [
 		'feed-service',
 		'feed-aggregator',
-		'feed-manager'
-	], function(FeedService, FeedAggregator, FeedManager) {
+		'feed-manager',
+		'persistence'
+	], function(FeedService, FeedAggregator, FeedManager, Persistence) {
 		FeedService.attachTo(document);
 		FeedAggregator.attachTo('#feed-items');
 		FeedManager.attachTo('#feed-manager');
+		Persistence.attachTo(document);
 	});
 </script>
 

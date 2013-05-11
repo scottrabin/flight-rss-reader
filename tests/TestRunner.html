@@ -26,12 +26,18 @@
 		paths: {
 			"text": "../components/requirejs-text/text",
 			"flight": "../components/flight",
+			"jcookie": "../components/jCookie/jcookie",
+			"jstorage": "../components/jStorage/jstorage",
 			"spec": "../../tests"
+		},
+		shim: {
+			"jstorage": ['jcookie']
 		}
 	}, [
 		'spec/feed_manager_spec',
 		'spec/feed_service_spec',
-		'spec/feed_aggregator_spec'
+		'spec/feed_aggregator_spec',
+		'spec/persistence_spec'
 	], function() {
 		jasmine.getEnv().execute();
 	});
