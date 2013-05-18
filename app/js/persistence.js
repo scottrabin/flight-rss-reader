@@ -34,6 +34,10 @@ define(function(require) {
 		};
 
 		this.after('initialize', function() {
+			// for each stored feed, emit an 'addFeed' event
+			this.getStoredFeeds().forEach(function(feed) {
+				this.trigger('addFeed', {feedUrl: feed});
+			}, this);
 			this.on(document, 'addFeed', this.storeFeed);
 			this.on(document, 'removeFeed', this.removeFeed);
 		});
