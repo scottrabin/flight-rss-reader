@@ -1,12 +1,32 @@
 "use strict";
 
 describeComponent('persistence', function() {
-	describe("while the app is running", function() {
-		beforeEach(setupComponent);
-		afterEach(function() {
-			$.storage.removeItem('feeds', 'localStorage');
-		});
+	beforeEach(setupComponent);
+	afterEach(function() {
+		$.storage.removeItem('feeds', 'localStorage');
+	});
 
+	it("should attempt to store an array of feeds via `storeFeed`", function() {
+		spyOn($.storage, 'setItem');
+
+		this.component.storeFeeds(['firstFeed', 'secondFeed']);
+		expect($.storage.setItem).toHaveBeenCalled();
+		expect($.storage.setItem.mostRecentCall.args[1]).toBe(JSON.stringify(['firstFeed', 'secondFeed']));
+	});
+
+	it("should retrieve stored items via `getStoredFeeds`", function() {
+		spyOn($.storage, 'getItem');
+
+		this.component.getStoredFeeds();
+		expect($.storage.getItem).toHaveBeenCalled();
+	});
+
+	it("should retrieve an object equivalent to the one stored", function() {
+		this.component.storeFeeds(['a feed', 'another feed']);
+		expect(this.component.getStoredFeeds()).toEqual(['a feed', 'another feed']);
+	});
+
+	describe("while the app is running", function() {
 		it("should respond to the 'addFeed' event by storing the feed", function() {
 			this.component.trigger('addFeed', {feedUrl: 'http://feeds.com/rss'});
 

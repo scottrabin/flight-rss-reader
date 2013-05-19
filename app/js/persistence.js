@@ -3,18 +3,15 @@
 define(function(require) {
 	// ensure the library is loaded & ready
 	require('jstorage');
-
 	var defineComponent = require('flight/lib/component');
-	var storageKey  = 'feeds';
-	var storageMode = 'localStorage';
 
 	function PersistenceComponent() {
 		this.storeFeeds = function(feeds) {
-			$.storage.setItem(storageKey, JSON.stringify(feeds), storageMode);
+			$.storage.setItem('feeds', JSON.stringify(feeds), 'localStorage');
 		};
 
 		this.getStoredFeeds = function() {
-			return JSON.parse($.storage.getItem(storageKey, storageMode)) || [];
+			return JSON.parse($.storage.getItem('feeds', 'localStorage') || '[]');
 		};
 
 		this.storeFeed = function(event, data) {
