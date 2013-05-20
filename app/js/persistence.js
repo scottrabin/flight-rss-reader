@@ -30,13 +30,17 @@ define(function(require) {
 			}
 		};
 
-		this.after('initialize', function() {
+		this.initFeeds = function() {
 			// for each stored feed, emit an 'addFeed' event
 			this.getStoredFeeds().forEach(function(feed) {
 				this.trigger('addFeed', {feedUrl: feed});
 			}, this);
+		};
+
+		this.after('initialize', function() {
 			this.on(document, 'addFeed', this.storeFeed);
 			this.on(document, 'removeFeed', this.removeFeed);
+			this.on(document, 'initializeApp', this.initFeeds);
 		});
 	}
 

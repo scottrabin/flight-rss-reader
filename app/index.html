@@ -54,6 +54,8 @@
 		FeedAggregator.attachTo('#feed-items');
 		FeedManager.attachTo('#feed-manager');
 		Persistence.attachTo(document);
+
+		$(document).trigger('initializeApp');
 	});
 </script>
 
