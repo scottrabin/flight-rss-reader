@@ -30,8 +30,7 @@ define(function(require) {
 		};
 
 		this.insertOption = function(feed) {
-			var exists = (this.select('filterSelector').
-						  find('option[value="' + feed.feedUrl + '"]').length > 0);
+			var exists = (this.selectContaining('filterSelector', 'option[value="' + feed.feedUrl + '"]').length > 0);
 			if (!exists) {
 				this.select('filterSelector').
 					append(this.template('optionTemplate', feed));
@@ -41,8 +40,7 @@ define(function(require) {
 		this.insertEntry = function(entry) {
 			// detect an entry's existence by looking for a feed item
 			// with a link that points to the same place
-			var exists = (this.select('feedItem').
-				find('.link[href="' + entry.link + '"]').length > 0);
+			var exists = (this.selectContaining('feedItem', '.link[href="' + entry.link + '"]').length > 0);
 			if (!exists) {
 				this.select('feedList').
 					append(this.template('itemTemplate', entry));
@@ -85,5 +83,7 @@ define(function(require) {
 		});
 	}
 
-	return defineComponent(FeedItems, require('mixin-template'));
+	return defineComponent(FeedItems,
+						   require('mixin-selectcontaining'),
+						   require('mixin-template'));
 });

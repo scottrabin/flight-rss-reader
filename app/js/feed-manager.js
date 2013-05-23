@@ -50,10 +50,7 @@ define(function(require) {
 		 * Remove a feed from the list of watched feeds
 		 */
 		this.removeFeed = function(event, feed) {
-			var feedRow = this.select('feedItem').filter(function() {
-				return $(this).find('.url').text() === feed.feedUrl;
-			});
-			feedRow.remove();
+			this.selectContaining('feedItem', '.url:contains("' + feed.feedUrl + '")').remove();
 		};
 
 		/**
@@ -71,9 +68,8 @@ define(function(require) {
 		 * Event listener for updating feed data after request fulfillment
 		 */
 		this.updateFeed = function(event, feedData) {
-			this.select('feedItem').filter(function() {
-				return $(this).find('.url').text() === feedData.feedUrl;
-			}).replaceWith(this.template('feedListItemTemplate', feedData));
+			this.selectContaining('feedItem', '.url:contains("' + feedData.feedUrl + '")').
+				replaceWith(this.template('feedListItemTemplate', feedData));
 		};
 
 		this.after('initialize', function() {
@@ -95,5 +91,7 @@ define(function(require) {
 		});
 	}
 
-	return defineComponent(FeedManager, require('mixin-template'));
+	return defineComponent(FeedManager,
+						   require('mixin-selectcontaining'),
+						   require('mixin-template'));
 });
