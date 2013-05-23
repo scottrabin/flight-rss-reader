@@ -3,15 +3,16 @@
 define(function(require) {
 	var defineComponent = require('flight/lib/component');
 	var extractFormData = require('utils/formData');
-	var feedManagerTemplate = require('text!tmpl/feed-manager.html');
-	var feedListItemTemplate = require('text!tmpl/feed-manager-feed.html');
 
 	function FeedManager() {
 		this.defaultAttrs({
 			"feedItem": ".feed",
 			"removeFeed": ".feed .remove",
 			"addForm": "form",
-			"feedList": ".feed-list tbody"
+			"feedList": ".feed-list tbody",
+
+			"feedManagerTemplate": require('text!tmpl/feed-manager.html'),
+			"feedListItemTemplate": require('text!tmpl/feed-manager-feed.html')
 		});
 
 		/**
@@ -30,14 +31,9 @@ define(function(require) {
 		 * Add a specified feed to the list of watched feeds
 		 */
 		this.addFeed = function(event, feedData) {
-			// create a new feed row
-			var feed = $(feedListItemTemplate);
-
-			feed.
-				// format it
-				find('.url').text(feedData.feedUrl).end().
-				// and insert it into the list
-				appendTo(this.select('feedList'));
+			// insert a new feed into the list
+			this.select('feedList').
+				append(this.template('feedListItemTemplate', feedData));
 
 			// request additional feed data
 			this.trigger('uiNeedsFeedInfo', feedData);
@@ -51,7 +47,7 @@ define(function(require) {
 		 */
 		this.removeFeed = function(event, feed) {
 			var feedRow = this.select('feedItem').filter(function() {
-				return $(this).find('.url').text() == feed.feedUrl;
+				return $(this).find('.url').text() === feed.feedUrl;
 			});
 			feedRow.remove();
 		};
@@ -71,15 +67,14 @@ define(function(require) {
 		 * Event listener for updating feed data after request fulfillment
 		 */
 		this.updateFeed = function(event, feedData) {
-			var feedRow = this.select('feedItem').filter(function() {
-				return $(this).find('.url').text() == feedData.feedUrl;
-			});
-			feedRow.find('.title').text(feedData.title);
+			this.select('feedItem').filter(function() {
+				return $(this).find('.url').text() === feedData.feedUrl;
+			}).replaceWith(this.template('feedListItemTemplate', feedData));
 		};
 
 		this.after('initialize', function() {
 			// insert the feed manager template into the component node
-			this.$node.html(feedManagerTemplate);
+			this.$node.html(this.attr.feedManagerTemplate);
 
 			this.on('submit', {
 				"addForm": this.submitFeed
@@ -96,5 +91,5 @@ define(function(require) {
 		});
 	}
 
-	return defineComponent(FeedManager);
+	return defineComponent(FeedManager, require('mixin-template'));
 });
