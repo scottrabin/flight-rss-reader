@@ -19,10 +19,6 @@ define(function(require) {
 		 * a "addFeed" event
 		 */
 		this.submitFeed = function(event) {
-			// first, cancel the event; don't want to
-			// unintentionally submit the form
-			event.preventDefault();
-
 			// get the form data as a key/value pair
 			var formData = extractFormData(event);
 
