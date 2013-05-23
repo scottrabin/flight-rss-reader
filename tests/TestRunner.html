@@ -2,9 +2,9 @@
 <html>
 <head>
   <title>Jasmine Test Runner</title>
-  <link rel="stylesheet" type="text/css" href="../node_modules/phantom-jasmine/vendor/jasmine-1.2.0/jasmine.css">
-  <script type="text/javascript" src="../node_modules/phantom-jasmine/vendor/jasmine-1.2.0/jasmine.js"></script>
-  <script type="text/javascript" src="../node_modules/phantom-jasmine/vendor/jasmine-1.2.0/jasmine-html.js"></script>
+  <link rel="stylesheet" type="text/css" href="../app/components/jasmine/lib/jasmine-core/jasmine.css">
+  <script type="text/javascript" src="../app/components/jasmine/lib/jasmine-core/jasmine.js"></script>
+  <script type="text/javascript" src="../app/components/jasmine/lib/jasmine-core/jasmine-html.js"></script>
 
   <script type="text/javascript" src="../node_modules/phantom-jasmine/lib/console-runner.js"></script>
   <script type="text/javascript" src="../app/components/es5-shim/es5-shim.js"></script>
@@ -18,7 +18,11 @@
 
 <script type="text/javascript">
 	var console_reporter = new jasmine.ConsoleReporter()
-	jasmine.getEnv().addReporter(new jasmine.TrivialReporter());
+	var html_reporter = new jasmine.HtmlReporter();
+	jasmine.getEnv().addReporter(html_reporter);
+	jasmine.getEnv().specFilter = function(spec) {
+		return html_reporter.specFilter(spec);
+	};
 	jasmine.getEnv().addReporter(console_reporter);
 
 	require({
