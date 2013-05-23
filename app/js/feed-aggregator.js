@@ -2,14 +2,16 @@
 
 define(function(require) {
 	var defineComponent = require('flight/lib/component');
-	var aggregatorTemplate = require('text!tmpl/feed-aggregator.html');
-	var template = require('text!tmpl/feed-item.html');
 
 	function FeedItems() {
 		this.defaultAttrs({
 			"filterSelector": "select",
 			"feedList": ".feed-list",
-			"feedItem": ".feed-list .feed"
+			"feedItem": ".feed-list .feed",
+
+			"optionTemplate": '<option value="{feedUrl}">{title}</option>',
+			"itemTemplate": require('text!tmpl/feed-item.html'),
+			"aggregatorTemplate": require('text!tmpl/feed-aggregator.html')
 		});
 
 		this.updateFeeds = function(event, feedData) {
@@ -31,10 +33,8 @@ define(function(require) {
 			var exists = (this.select('filterSelector').
 						  find('option[value="' + feed.feedUrl + '"]').length > 0);
 			if (!exists) {
-				$(document.createElement('option')).
-					text(feed.title).
-					val(feed.feedUrl).
-					appendTo(this.select('filterSelector'));
+				this.select('filterSelector').
+					append(this.template('optionTemplate', feed));
 			}
 		};
 
@@ -44,11 +44,8 @@ define(function(require) {
 			var exists = (this.select('feedItem').
 				find('.link[href="' + entry.link + '"]').length > 0);
 			if (!exists) {
-				$(template).
-					find('.title').text(entry.title).end().
-					find('.link').attr('href', entry.link).end().
-					find('.snippet').text(entry.contentSnippet).end().
-					appendTo(this.select('feedList'));
+				this.select('feedList').
+					append(this.template('itemTemplate', entry));
 			}
 		};
 
@@ -76,7 +73,7 @@ define(function(require) {
 		};
 
 		this.after('initialize', function() {
-			this.$node.html(aggregatorTemplate);
+			this.$node.html(this.attr.aggregatorTemplate);
 			this.on('change', {
 				'filterSelector': this.render
 			});
@@ -88,5 +85,5 @@ define(function(require) {
 		});
 	}
 
-	return defineComponent(FeedItems);
+	return defineComponent(FeedItems, require('mixin-template'));
 });
