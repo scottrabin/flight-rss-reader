@@ -1,11 +1,9 @@
 "use strict";
 
 describeMixin('mixin-template', function() {
-	var fixture = '<div></div>';
-
 	describe("#template", function() {
 		it("should format the named template with the supplied object", function() {
-			setupComponent(fixture, {
+			setupComponent({
 				"nameOfTemplate": '<div class="test {className}">{contents}</div>'
 			});
 			var templateReturn = this.component.template('nameOfTemplate', {
