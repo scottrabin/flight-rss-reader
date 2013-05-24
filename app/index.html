@@ -43,19 +43,10 @@
 		},
 		shim: {
 			"jstorage": ['jcookie']
-		}
-	}, [
-		'feed-service',
-		'feed-aggregator',
-		'feed-manager',
-		'persistence'
-	], function(FeedService, FeedAggregator, FeedManager, Persistence) {
-		FeedService.attachTo(document);
-		FeedAggregator.attachTo('#feed-items');
-		FeedManager.attachTo('#feed-manager');
-		Persistence.attachTo(document);
-
-		$(document).trigger('initializeApp');
+		},
+		deps: [
+			'boot'
+		]
 	});
 </script>
 
