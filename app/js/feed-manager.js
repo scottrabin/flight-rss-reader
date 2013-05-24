@@ -11,7 +11,7 @@ define(function(require) {
 			"addForm": "form",
 			"feedList": ".feed-list tbody",
 
-			"feedManagerTemplate": require('text!tmpl/feed-manager.html'),
+			"template": require('text!tmpl/feed-manager.html'),
 			"feedListItemTemplate": require('text!tmpl/feed-manager-feed.html')
 		});
 
@@ -73,9 +73,6 @@ define(function(require) {
 		};
 
 		this.after('initialize', function() {
-			// insert the feed manager template into the component node
-			this.$node.html(this.attr.feedManagerTemplate);
-
 			this.on('submit', {
 				"addForm": this.submitFeed
 			});
@@ -91,5 +88,7 @@ define(function(require) {
 		});
 	}
 
-	return defineComponent(FeedManager, require('mixin-template'));
+	return defineComponent(FeedManager,
+						   require('mixin-markup'),
+						   require('mixin-template'));
 });

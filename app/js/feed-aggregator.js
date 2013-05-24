@@ -11,7 +11,7 @@ define(function(require) {
 
 			"optionTemplate": '<option value="{feedUrl}">{title}</option>',
 			"itemTemplate": require('text!tmpl/feed-item.html'),
-			"aggregatorTemplate": require('text!tmpl/feed-aggregator.html')
+			"template": require('text!tmpl/feed-aggregator.html')
 		});
 
 		this.updateFeeds = function(event, feedData) {
@@ -73,7 +73,6 @@ define(function(require) {
 		};
 
 		this.after('initialize', function() {
-			this.$node.html(this.attr.aggregatorTemplate);
 			this.on('change', {
 				'filterSelector': this.render
 			});
@@ -85,5 +84,7 @@ define(function(require) {
 		});
 	}
 
-	return defineComponent(FeedItems, require('mixin-template'));
+	return defineComponent(FeedItems,
+						   require('mixin-markup'),
+						   require('mixin-template'));
 });
