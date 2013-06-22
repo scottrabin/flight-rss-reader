@@ -1,0 +1,8 @@
+{
+  "name": "jStorage",
+  "version": "1.1.1",
+  "repository": {
+    "type": "git",
+    "url": "git://github.com/martinkr/jStorage.git"
+  }
+}

@@ -19,10 +19,6 @@ define(function(require) {
 		 * a "addFeed" event
 		 */
 		this.submitFeed = function(event) {
-			// first, cancel the event; don't want to
-			// unintentionally submit the form
-			event.preventDefault();
-
 			// get the form data as a key/value pair
 			var formData = extractFormData(event);
 
@@ -36,13 +32,15 @@ define(function(require) {
 		this.addFeed = function(event, feedData) {
 			// create a new feed row
 			var feed = $(feedListItemTemplate);
-			// format it
-			feed.find('.url').text(feedData.feedUrl);
-			// and insert it into the list
-			this.select('feedList').append(feed);
+
+			feed.
+				// format it
+				find('.url').text(feedData.feedUrl).end().
+				// and insert it into the list
+				appendTo(this.select('feedList'));
 
 			// request additional feed data
-			this.trigger('needsFeedInfo', feedData);
+			this.trigger('uiNeedsFeedInfo', feedData);
 
 			// clear out the form
 			this.select('addForm').get(0).reset();
