@@ -2,7 +2,7 @@
 <html>
 <head>
   <title>Twitter Flight RSS Reader</title>
-  <script type="text/javascript" src="../app/components/es5-shim/es5-shim.js"></script>
+  <script type="text/javascript" src="components/es5-shim/es5-shim.js"></script>
   <script type="text/javascript" src="//www.google.com/jsapi"></script>
   <script type="text/javascript">
 	google.load('feeds', 1);
@@ -30,11 +30,10 @@
 	<div id="feed-manager"></div>
 </div>
 
-<script type="text/javascript" src="../app/components/jquery/jquery.js"></script>
-<script type="text/javascript" src="../app/components/requirejs/require.js"></script>
+<script type="text/javascript" src="components/jquery/jquery.js"></script>
+<script type="text/javascript" src="components/requirejs/require.js" data-main="js/main"></script>
 <script type="text/javascript">
-	require({
-		baseUrl: "js",
+	require.config({
 		paths: {
 			"text": "../components/requirejs-text/text",
 			"jstorage": "../components/jStorage/jstorage",
@@ -44,18 +43,6 @@
 		shim: {
 			"jstorage": ['jcookie']
 		}
-	}, [
-		'feed-service',
-		'feed-aggregator',
-		'feed-manager',
-		'persistence'
-	], function(FeedService, FeedAggregator, FeedManager, Persistence) {
-		FeedService.attachTo(document);
-		FeedAggregator.attachTo('#feed-items');
-		FeedManager.attachTo('#feed-manager');
-		Persistence.attachTo(document);
-
-		$(document).trigger('initializeApp');
 	});
 </script>
 
