@@ -18,7 +18,7 @@ define(function(require) {
 		};
 
 		this.after('initialize', function() {
-			this.on('needsFeedInfo', this.fetchFeedInfo);
+			this.on('uiNeedsFeedInfo', this.fetchFeedInfo);
 		});
 	}
 

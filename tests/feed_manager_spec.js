@@ -117,8 +117,8 @@ describeComponent('feed-manager', function() {
 		expect(this.component.select('feedItem')).not.toExist();
 	});
 
-	it("should respond to 'addFeed' by emitting a 'needsFeedInfo' event", function() {
-		var eventSpy = spyOnEvent(document, 'needsFeedInfo');
+	it("should respond to 'addFeed' by emitting a 'uiNeedsFeedInfo' event", function() {
+		var eventSpy = spyOnEvent(document, 'uiNeedsFeedInfo');
 
 		this.component.trigger('addFeed', {feedUrl: FEED_URL});
 		expect(eventSpy).toHaveBeenTriggeredOn(document);
